@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FavoriteActivity">
+    tools:context=".FavoriteActivity"
+    android:background="@drawable/background1">
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/NavigationView"
         android:layout_width="wrap_content"
         android:layout_height="55dp"
         android:layout_gravity="bottom"
-        android:background="#8DA2DB"
+        android:background="#D5C8BB"
         app:itemIconTint="#000000"
         app:itemTextColor="#000000"
         app:menu="@menu/bottom_navigation_menu"
