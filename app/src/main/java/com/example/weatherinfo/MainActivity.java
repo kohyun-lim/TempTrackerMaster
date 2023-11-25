@@ -1,9 +1,12 @@
 package com.example.weatherinfo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androdocs.httprequest.HttpRequest;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 import org.json.JSONObject;
@@ -25,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     String API = "b0eafcdb33218071192f7471c1bdbb2f";
     ImageView search;
     EditText etCity;
-    TextView city,country,time,temp,forecast,humidity,min_temp,max_temp,sunrises,sunsets,pressure,windSpeed;
+    BottomNavigationView naviagtion;
+    TextView city, country, time, temp, forecast, humidity, min_temp, max_temp, sunrises, sunsets, pressure, windSpeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         {
             etCity = (EditText) findViewById(R.id.Your_city);
             search = (ImageView) findViewById(R.id.search);
+            naviagtion = findViewById(R.id.NavigationView);
+
 
             // CALL ALL ANSWERS :
 
@@ -59,10 +66,33 @@ public class MainActivity extends AppCompatActivity {
                     new weatherTask().execute();
                 }
             });
+
         }
+        naviagtion.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_home:
+                        Intent intentHome = new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(intentHome);
+                        return true;
+                    case R.id.action_search:
+                        Intent intentSearch = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(intentSearch);
+                        return true;
+                    case R.id.action_favorite:
+                        Intent intentFavorite = new Intent(MainActivity.this, FavoriteActivity.class);
+                        startActivity(intentFavorite);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
-     class weatherTask extends AsyncTask<String, Void, String>{
+
+    class weatherTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -86,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject sys = jsonObj.getJSONObject("sys");
 
 
-
                 // CALL VALUE IN API :
                 String city_name = jsonObj.getString("name");
                 String countryname = sys.getString("country");
@@ -105,10 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 String sunset = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(set * 1000));
 
 
-
-
-
-
                 // SET ALL VALUES IN TEXTBOX :
                 city.setText(city_name);
                 country.setText(countryname);
@@ -123,27 +148,11 @@ public class MainActivity extends AppCompatActivity {
                 pressure.setText(pre);
                 windSpeed.setText(windspeed);
 
-//                int backgroundResource = R.drawable.clear_day; // Default background
-//
-//                if (cast.contains("clear")) {
-//                    backgroundResource = R.drawable.clear_day;
-//                } else if (cast.contains("rain")) {
-//                    backgroundResource = R.drawable.rainy;
-//                } else if (cast.contains("snow")) {
-//                    backgroundResource = R.drawable.snowy;
-//                }
-//                // Add more conditions as needed
-//
-//                // Update the background image
-//                ImageView weatherBackground = findViewById(R.id.weatherBackground);
-//                weatherBackground.setImageResource(backgroundResource);
-//                weatherBackground.setVisibility(View.VISIBLE); // Make it visible
-
-
             } catch (Exception e) {
 
                 Toast.makeText(MainActivity.this, "Error:" + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 }
